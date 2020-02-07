@@ -1,6 +1,11 @@
-import React from 'react';
+import React from "react";
 
-import './App.scss';
+import "./App.scss";
 
-export default props => 
-    <div className="app"></div>
+import Routes from "./Routes";
+
+export default props => (
+    <div className="app">
+        <Routes />
+    </div>
+)

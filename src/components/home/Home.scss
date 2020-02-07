@@ -1,0 +1,70 @@
+.home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+
+    .title-container {
+        display: grid;
+        grid-template-columns: 300px 300px;
+        grid-template-rows: 150px 150px;
+        grid-template-areas: 
+            "title deck-icon"
+            "play-button play-button"
+        ;
+
+        .title {
+            grid-area: title;
+            display: flex;
+            align-items: flex-end;
+            color: white;
+            font-size: 75px;
+        }
+
+        .deck-icon {
+            grid-area: deck-icon;
+            width: 130px;
+            display: flex;
+            justify-self: flex-end;
+            align-self: flex-end;
+        }
+
+        .play-button {
+            grid-area: play-button;
+            background-color: #000022;;
+            border: 2px solid white;
+            border-radius: 35px;
+            width: 200px;
+            color: white;
+            height: 100px;
+            font-size: 35px;
+            justify-self: center;
+            margin-top: 40px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .play-button:active {
+            background-color: #2d344b;
+        }
+
+    }
+
+    .footer-container {
+        position: absolute;
+        bottom: 0;
+        margin-bottom: 20px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+
+        div {
+            margin: 10px 25px;
+            color: white;
+        }
+
+    }
+
+}

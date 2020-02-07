@@ -1,0 +1,18 @@
+.game-screen {
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .dashboard {
+        margin: 50px 10%;
+        height: 95%;
+        width: 95%;
+        border: 3px solid white;
+        border-radius: 10px;
+        display: grid;
+        grid-template-rows: 100px 1fr 100px;
+    }
+
+}

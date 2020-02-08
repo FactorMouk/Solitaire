@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-// import SettingsIcon from '@material-ui/icons/Settings';
+import IconButton from '@material-ui/core/IconButton'
+import SettingsIcon from '@material-ui/icons/Settings';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import './GameScreenHeader.scss';
 
@@ -11,12 +13,18 @@ export default class GameScreenHeader extends Component {
     render() {
         return (
             <div className="game-screen-header">
-                <div></div>
-                <div className="game-name">
-                    <h3>{this.props.gameName}</h3>
+                <div className="menu-functions left">
+                    <IconButton color="primary" aria-label="settings">
+                        <ArrowBackIcon style={{fontSize: 25, color: 'white', margin: 15}}/>
+                    </IconButton>
                 </div>
-                <div>
-                    {/* <SettingsIcon /> */}
+                <div className="game-name">
+                    <h3>Klondike</h3>
+                </div>
+                <div className="menu-functions right">
+                    <IconButton color="primary" aria-label="settings">
+                        <SettingsIcon style={{fontSize: 25, color: 'white', margin: 15}}/>
+                    </IconButton>
                 </div>
             </div>
         )

@@ -1,6 +1,27 @@
 .game-screen-header {
-    background-color: #000022;
-    border-radius: 10px 10px 0px 0px;
+    background-color: #00000038;
     display: grid;
     grid-template-columns: 200px 1fr 200px;
+    
+    .menu-functions {
+        display: flex;
+        align-items: center;
+    }
+
+    .left {
+        justify-content: flex-start;
+    }
+
+    .right {
+        justify-content: flex-end;
+    }
+
+    .game-name {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 20px;
+    }
+
 }

@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 
 import './GameScreenTable.scss';
 
-import KlondikeTable from './KlondikeTable/KlondikeTable';
-import SpiderTable from './SpiderTable/SpiderTable';
-import FreeCellTable from './FreeCellTable/FreeCellTable';
-import YukonTable from './YukonTable/YukonTable';
-import PyramidTable from './PyramidTable/PyramidTable';
-import ThreePeaksTable from './ThreePeaksTable/ThreePeaksTable';
-import GolfTable from './GolfTable/GolfTable';
-import FortyThievesTable from './FortyThievesTable/FortyThievesTable';
-import DemonTable from './DemonTable/DemonTable';
+import KlondikeTable from './tableComponents/KlondikeTable/KlondikeTable';
+import SpiderTable from './tableComponents/SpiderTable/SpiderTable';
+import FreeCellTable from './tableComponents/FreeCellTable/FreeCellTable';
+import YukonTable from './tableComponents/YukonTable/YukonTable';
+import PyramidTable from './tableComponents/PyramidTable/PyramidTable';
+import ThreePeaksTable from './tableComponents/ThreePeaksTable/ThreePeaksTable';
+import GolfTable from './tableComponents/GolfTable/GolfTable';
+import FortyThievesTable from './tableComponents/FortyThievesTable/FortyThievesTable';
+import DemonTable from './tableComponents/DemonTable/DemonTable';
 
 export default class GameScreenTable extends Component {
 

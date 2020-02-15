@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 
 import './Card.scss';
 
-import spades from './../../../../assets/icons/cards/spades.png';
-import clubs from './../../../../assets/icons/cards/clubs.png';
-import diamonds from './../../../../assets/icons/cards/diamonds.png';
-import hearts from './../../../../assets/icons/cards/hearts.png';
-import king from './../../../../assets/icons/cards/king.png';
-import queen from './../../../../assets/icons/cards/queen.png';
-import jack from './../../../../assets/icons/cards/jack.png';
+import spades from './../../../../../assets/icons/cards/spades.png';
+import clubs from './../../../../../assets/icons/cards/clubs.png';
+import diamonds from './../../../../../assets/icons/cards/diamonds.png';
+import hearts from './../../../../../assets/icons/cards/hearts.png';
+import king from './../../../../../assets/icons/cards/king.png';
+import queen from './../../../../../assets/icons/cards/queen.png';
+import jack from './../../../../../assets/icons/cards/jack.png';
 
-import cardFlipSound from './../../../../assets/sounds/cardFlip.mp3';
+import cardFlipSound from './../../../../../assets/sounds/cardFlip.mp3';
 
 export default class Card extends Component {
 
@@ -103,7 +103,7 @@ export default class Card extends Component {
                         </div>
                     </div>
                     <div className="card-back">
-                        <img src={require("../../../../assets/img/back-cards/darkback3.png")}/>
+                        <img src={require("./../../../../../assets/img/back-cards/darkback3.png")}/>
                     </div>
                 </div>
             </div>

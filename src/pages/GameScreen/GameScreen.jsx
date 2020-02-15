@@ -7,6 +7,7 @@ import GameScreenTable from './GameScreenTable/GameScreenTable';
 import GameScreenFooter from './GameScreenFooter/GameScreenFooter';
 
 export default class GameScreen extends Component {
+
     constructor(props) {
         super(props);
     }
@@ -15,8 +16,8 @@ export default class GameScreen extends Component {
         return (
             <div className="game-screen">
                 <div className="dashboard">
-                    <GameScreenHeader />
-                    <GameScreenTable />
+                    <GameScreenHeader/>
+                    <GameScreenTable gameTable="klondike"/>
                     <GameScreenFooter />
                 </div>
             </div>

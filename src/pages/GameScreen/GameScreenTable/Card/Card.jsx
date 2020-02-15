@@ -32,15 +32,35 @@ export default class Card extends Component {
     defineImages() {
         let suitImg;
         let centerImg;
-        if(this.props.suit === "spades") suitImg = spades;
-        else if(this.props.suit === "clubs") suitImg = clubs;
-        else if(this.props.suit === "diamonds") suitImg = diamonds
-        else if(this.props.suit === "hearts") suitImg = hearts
 
-        if(this.props.type === "K") centerImg = king;
-        else if(this.props.type === "Q") centerImg = queen;
-        else if(this.props.type === "J") centerImg = jack;
-        else centerImg = suitImg;
+        switch(this.props.suit) {
+            case "spades":
+                suitImg = spades;
+                break;
+            case "clubs":
+                suitImg = clubs;
+                break;
+            case "diamonds":
+                suitImg = diamonds;
+                break;
+            case "hearts":
+                suitImg = hearts;
+                break;
+        }
+
+        switch(this.props.type) {
+            case "K":
+                centerImg = king;
+                break;
+            case "Q":
+                centerImg = queen;
+                break;
+            case "J":
+                centerImg = jack;
+                break;
+            default:
+                centerImg = suitImg;
+        }
 
         this.setState(state => ({...state, suitImg: suitImg, centerImg: centerImg}));
     }

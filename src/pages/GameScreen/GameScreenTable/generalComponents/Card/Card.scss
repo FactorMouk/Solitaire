@@ -1,4 +1,5 @@
 .card-container {
+    position: relative;
     height: 135px;
     width: 100px;
     display: flex;
@@ -20,6 +21,7 @@
         .card-front {
             display: grid;
             grid-template-rows: 45px 1fr 45px;
+            transform: rotateY(180deg);
             .card-top {
                 display: flex;
                 flex-direction: column;
@@ -79,7 +81,6 @@
         .card-back {
             display: flex;
             justify-content: center;
-            transform: rotateY(180deg);
             img {
                 height: 100%;
                 pointer-events: none;

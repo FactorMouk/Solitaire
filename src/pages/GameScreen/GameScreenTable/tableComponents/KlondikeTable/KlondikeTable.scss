@@ -1,7 +1,14 @@
 .klondike-table {
     height: 100%;
     display: grid;
-    grid-template-columns: 110px 110px 110px 110px 110px 110px 110px;
-    grid-template-rows: 1fr 2fr;
+    grid-template-columns: repeat(7, 120px);
+    grid-template-rows: 155px 2fr;
     margin: 0 50px;
+
+    .suits-piles-container {
+        grid-column: 4 / span 4;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
 }

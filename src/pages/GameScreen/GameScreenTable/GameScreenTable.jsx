@@ -22,7 +22,7 @@ export default class GameScreenTable extends Component {
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.defineTable();
     }
 
@@ -56,13 +56,14 @@ export default class GameScreenTable extends Component {
             case "demon":
                 gameTable = <DemonTable></DemonTable>
                 break;
+            default:
         }
         this.setState(state => ({...state, gameTable: gameTable}));
     }
 
     render() {
         return (
-            <div className="game-screen-table">
+            <div id="game-screen-table" className="game-screen-table">
                 {this.state.gameTable}
             </div>
         )

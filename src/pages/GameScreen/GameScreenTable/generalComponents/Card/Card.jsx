@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import $ from 'jquery';
+import 'jquery-ui/ui/core';
+import 'jquery-ui/ui/widgets/draggable';
+import 'jquery-ui/ui/widgets/droppable';
 
 import './Card.scss';
 
@@ -20,13 +24,15 @@ export default class Card extends Component {
             suitImg: null,
             centerImg: null,
             flipped: false
+            // draggable: false
         }
         this.flipCard = this.flipCard.bind(this);
         this.defineImages = this.defineImages.bind(this);
     }
-
-    componentWillMount() {
+    
+    componentDidMount() {
         this.defineImages();
+        this.makeDraggable();
     }
 
     defineImages() {
@@ -46,6 +52,7 @@ export default class Card extends Component {
             case "hearts":
                 suitImg = hearts;
                 break;
+            default:
         }
 
         switch(this.props.type) {
@@ -65,6 +72,20 @@ export default class Card extends Component {
         this.setState(state => ({...state, suitImg: suitImg, centerImg: centerImg}));
     }
 
+    makeDraggable() {
+        $(() => {
+            if(this.props.draggable){
+                $("#" + this.props.type + "-" + this.props.suit + "-" + this.props.label).draggable(
+                    {
+                        containment: "#game-screen-table", 
+                        scroll: false,
+                        stack: "#" + this.props.type + "-" + this.props.suit + "-" + this.props.label
+                    }
+                );
+            }
+        });
+    }
+
     flipCard(currentTarget) {
         let cardFlip = new Audio(cardFlipSound);
         cardFlip.volume = 0.2;
@@ -81,6 +102,9 @@ export default class Card extends Component {
         return (
             <div className="card-container" id={this.props.type + "-" + this.props.suit + "-" + this.props.label} onClick={(e) => this.flipCard(e.currentTarget)}>
                 <div className="card-container-inner">
+                    <div className="card-back">
+                        <img src={require("./../../../../../assets/img/back-cards/darkback3.png")} alt="back-card"/>
+                    </div>
                     <div className="card-front">
                         <div className="card-top">
                             <div className={"card-type " + (this.props.suit === "diamonds" || this.props.suit === "hearts" ? "red-type" : "dark-type")}>
@@ -101,9 +125,6 @@ export default class Card extends Component {
                                 { this.props.type }
                             </div>
                         </div>
-                    </div>
-                    <div className="card-back">
-                        <img src={require("./../../../../../assets/img/back-cards/darkback3.png")}/>
                     </div>
                 </div>
             </div>

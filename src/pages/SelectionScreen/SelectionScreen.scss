@@ -1,0 +1,17 @@
+img {
+  width: 100px;
+}
+
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.games {
+  display: flex;
+  justify-content: space-around;
+  width: 800px;
+  margin: 50px 0;
+}

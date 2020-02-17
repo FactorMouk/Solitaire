@@ -42,7 +42,7 @@ export default class KlondikeTable extends Component {
         for(let i = 0; i < suits.length; i++) {
             for(let j = 0; j < types.length; j++) {
                 cards.push(
-                    <Card key={types[j] + "-" + suits[i] + "-0"} type={types[j]} suit={suits[i]} label="0" flipped={false} draggable={true}></Card>
+                    {key: types[j] + "-" + suits[i] + "-0", type: types[j], suit: suits[i], label: "0", flipped: false, draggable: true, currentOrder: 0}
                 )
             }
         }
@@ -85,10 +85,7 @@ export default class KlondikeTable extends Component {
             }
             amount--;
         }
-        this.setState(state => ({...state, initialDistribution: initialDistribution, currentDistribution: initialDistribution}), ()=>{
-            console.log(this.state);
-        })
-        
+        this.setState({initialDistribution: initialDistribution, currentDistribution: initialDistribution});
     }
 
     render() {

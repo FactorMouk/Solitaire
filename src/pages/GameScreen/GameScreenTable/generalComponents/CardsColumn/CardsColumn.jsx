@@ -13,7 +13,7 @@ export default class CardsColumn extends Component {
     render() {
         return (
             <div className="cards-column">
-                <Card type="8" suit="hearts" label="0" draggable={true}></Card>
+                
             </div>
         )
     }

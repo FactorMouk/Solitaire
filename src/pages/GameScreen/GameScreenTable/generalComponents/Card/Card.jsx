@@ -24,7 +24,6 @@ export default class Card extends Component {
             suitImg: null,
             centerImg: null,
             flipped: false
-            // draggable: false
         }
         this.flipCard = this.flipCard.bind(this);
         this.defineImages = this.defineImages.bind(this);
@@ -33,6 +32,10 @@ export default class Card extends Component {
     componentDidMount() {
         this.defineImages();
         this.makeDraggable();
+    }
+
+    componentWillUpdate() {
+        console.log('atualizado')
     }
 
     defineImages() {
@@ -78,8 +81,7 @@ export default class Card extends Component {
                 $("#" + this.props.type + "-" + this.props.suit + "-" + this.props.label).draggable(
                     {
                         containment: "#game-screen-table", 
-                        scroll: false,
-                        stack: "#" + this.props.type + "-" + this.props.suit + "-" + this.props.label
+                        scroll: false                    
                     }
                 );
             }
@@ -100,7 +102,7 @@ export default class Card extends Component {
 
     render() {
         return (
-            <div className="card-container" id={this.props.type + "-" + this.props.suit + "-" + this.props.label} onClick={(e) => this.flipCard(e.currentTarget)}>
+            <div className="card-container" id={this.props.type + "-" + this.props.suit + "-" + this.props.label} style={{zIndex: this.props.currentOrder}} onClick={(e) => this.flipCard(e.currentTarget)}>
                 <div className="card-container-inner">
                     <div className="card-back">
                         <img src={require("./../../../../../assets/img/back-cards/darkback3.png")} alt="back-card"/>

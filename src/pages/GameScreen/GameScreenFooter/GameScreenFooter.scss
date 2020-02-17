@@ -1,0 +1,54 @@
+.game-screen-footer {
+    display: grid;
+    grid-template-columns: 1fr 125px 1fr;
+
+    .game-functions {
+        display: flex;
+        align-items: center;
+
+        .game-functions-button {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #00000099;
+            margin: 0px 20px;
+            color: white;
+            font-size: 12px;
+            padding: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            outline: none;
+        }
+
+        .game-functions-button:active {
+            background-color: #00000075;
+        }
+
+    }
+
+    .left {
+        justify-content: flex-start;
+    }
+
+    .right {
+        justify-content: flex-end;
+    }
+
+    .game-timer {
+        height: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        align-self: flex-end;
+        font-size: 20px;
+        color: white;
+        background-color: #00000033;
+        border-radius: 5px 5px 0px 0px;
+    }
+
+}

@@ -2,7 +2,7 @@ import React from "react";
 
 import "./Home.scss";
 
-import ButtonHome from "./button-home/ButtonHome";
+import ButtonHome from "./ButtonHome/ButtonHome";
 
 export default props => (
     <div className="home">

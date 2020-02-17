@@ -33,7 +33,7 @@
 
         .play-button {
             grid-area: play-button;
-            background-color: #000022;;
+            background-color: #36494E;
             border: 2px solid white;
             border-radius: 35px;
             width: 200px;
@@ -47,7 +47,8 @@
         }
 
         .play-button:active {
-            background-color: #2d344b;
+            background-color: #A9CEF4;
+            color: black;
         }
 
     }

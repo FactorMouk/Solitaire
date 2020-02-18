@@ -57,7 +57,6 @@ export default class DiscardPile extends Component {
                         inFlippedPile={false}
                         changePile={this.changePile.bind(this)}
                         columnPile={card.columnPile}
-                        onColumnPileTop={card.onColumnPileTop}
                     >
                     </Card>
                 ))}

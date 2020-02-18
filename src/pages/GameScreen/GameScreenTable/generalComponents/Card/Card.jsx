@@ -29,7 +29,6 @@ export default class Card extends Component {
         inDiscardPile: this.props.inDiscardPile,
         inFlippedPile: this.props.inFlippedPile,
         columnPile: this.props.columnPile,
-        onColumnPileTop: this.props.onColumnPileTop,
         suitImg: null, 
         centerImg: null,
     }

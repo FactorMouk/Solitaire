@@ -54,7 +54,6 @@ export default class FlippedPile extends Component {
                         inFlippedPile={true}
                         changePile={this.changePile.bind(this)}
                         columnPile={card.columnPile}
-                        onColumnPileTop={card.onColumnPileTop}
                     >
                     </Card>
                 ))}

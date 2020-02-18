@@ -50,7 +50,6 @@ export default class KlondikeTable extends Component {
                         inDiscardPile: false,
                         inFlippedPile: false,
                         columnPile: -1,
-                        onColumnPileTop: false,
                         suitImg: null, 
                         centerImg: null
                     }
@@ -96,7 +95,7 @@ export default class KlondikeTable extends Component {
             }
             amount--;
         }
-        this.setState({initialDistribution: initialDistribution, currentDistribution: initialDistribution});
+        this.setState({initialDistribution: initialDistribution, currentDistribution: initialDistribution}, () => console.log(this.state.initialDistribution));
     }
 
     render() {

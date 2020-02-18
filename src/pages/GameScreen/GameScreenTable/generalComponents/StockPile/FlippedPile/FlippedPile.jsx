@@ -27,9 +27,7 @@ export default class FlippedPile extends Component {
 
     componentDidUpdate(prevProps, prevStatus) {
         if (this.props.cards !== prevProps.cards) {
-            this.setState({currentCards: this.props.cards}, () => {
-                
-            })
+            this.setState({currentCards: this.props.cards})
         }
     }
 
@@ -52,7 +50,8 @@ export default class FlippedPile extends Component {
                         canFlip={false} 
                         draggable={card.draggable} 
                         currentOrder={currentOrder}
-                        inDiscardPile={true}
+                        inDiscardPile={false}
+                        inFlippedPile={true}
                         changePile={this.changePile.bind(this)}
                         columnPile={card.columnPile}
                         onColumnPileTop={card.onColumnPileTop}

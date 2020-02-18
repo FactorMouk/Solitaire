@@ -47,7 +47,9 @@ export default class Card extends Component {
     }
 
     componentDidUpdate(prevProps, prevStatus) {
-        
+        if(this.props.canFlip !== prevProps.canFlip) {
+            this.setState({canFlip: this.props.canFlip});
+        }
     }
 
     defineImages() {
@@ -92,7 +94,7 @@ export default class Card extends Component {
                     {
                         containment: "#game-screen-table", 
                         scroll: false,
-                        revert: 'invalid',
+                        revert: true,
                         stop: function( event, ui ) {
                             console.log(ui)
                         }                    
@@ -118,7 +120,7 @@ export default class Card extends Component {
                         this.setState(state => ({inDiscardPile: !state.inDiscardPile, inFlippedPile: true, canFlip: false}), () => {
                             setTimeout(() => {
                                 this.props.changePile(this.state);
-                            }, 600)
+                            }, 150)
                         })
                     }
                     transformParameters += "rotateY(180deg)";

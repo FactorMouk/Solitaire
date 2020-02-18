@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 
 import './KlondikeTable.scss';
 
-import Card from './../../generalComponents/Card/Card';
-import DiscardPile from '../../generalComponents/DiscardPile/DiscardPile';
-import FlippedPile from '../../generalComponents/FlippedPile/FlippedPile';
+import StockPile from '../../generalComponents/StockPile/StockPile';
 import SuitsPile from '../../generalComponents/SuitsPile/SuitsPile';
 import CardsColumn from '../../generalComponents/CardsColumn/CardsColumn';
 
@@ -42,7 +40,20 @@ export default class KlondikeTable extends Component {
         for(let i = 0; i < suits.length; i++) {
             for(let j = 0; j < types.length; j++) {
                 cards.push(
-                    {key: types[j] + "-" + suits[i] + "-0", type: types[j], suit: suits[i], label: "0", flipped: false, draggable: true, currentOrder: 0}
+                    {
+                        id: types[j] + "-" + suits[i] + "-0", 
+                        type: types[j], 
+                        suit: suits[i], label: "0", 
+                        flipped: false,
+                        draggable: true, 
+                        currentOrder: 0, 
+                        inDiscardPile: false,
+                        inFlippedPile: false,
+                        columnPile: -1,
+                        onColumnPileTop: false,
+                        suitImg: null, 
+                        centerImg: null
+                    }
                 )
             }
         }
@@ -91,8 +102,12 @@ export default class KlondikeTable extends Component {
     render() {
         return (
             <div className="klondike-table">
-                <DiscardPile cards={this.state.initialDistribution.discardPile}></DiscardPile>
-                <FlippedPile cards={this.state.initialDistribution.flippedPile}></FlippedPile>
+                <StockPile 
+                    game="klondike" 
+                    discardCards={this.state.initialDistribution.discardPile}
+                    flippedCards={this.state.initialDistribution.flippedPile}
+                >
+                </StockPile>
                 <div className="suits-piles-container">
                     <SuitsPile></SuitsPile>
                     <SuitsPile></SuitsPile>

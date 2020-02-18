@@ -8,10 +8,6 @@ import GameScreenFooter from './GameScreenFooter/GameScreenFooter';
 
 export default class GameScreen extends Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <div className="game-screen">

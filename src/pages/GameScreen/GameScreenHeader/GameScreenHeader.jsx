@@ -6,9 +6,6 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import './GameScreenHeader.scss';
 
 export default class GameScreenHeader extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         return (

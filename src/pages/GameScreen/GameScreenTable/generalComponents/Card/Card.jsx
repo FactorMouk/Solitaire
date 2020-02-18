@@ -18,13 +18,25 @@ import cardFlipSound from './../../../../../assets/sounds/cardFlip.mp3';
 
 export default class Card extends Component {
 
+    initialState = {
+        id: this.props.id,
+        type:this.props.type,
+        suit:this.props.suit,
+        label:this.props.label, 
+        flipped: this.props.flipped,
+        canFlip: this.props.canFlip,
+        draggable: this.props.draggable,
+        inDiscardPile: this.props.inDiscardPile,
+        inFlippedPile: this.props.inFlippedPile,
+        columnPile: this.props.columnPile,
+        onColumnPileTop: this.props.onColumnPileTop,
+        suitImg: null, 
+        centerImg: null,
+    }
+
     constructor(props) {
         super(props);
-        this.state = {
-            suitImg: null,
-            centerImg: null,
-            flipped: false
-        }
+        this.state = {...this.initialState};
         this.flipCard = this.flipCard.bind(this);
         this.defineImages = this.defineImages.bind(this);
     }
@@ -34,14 +46,13 @@ export default class Card extends Component {
         this.makeDraggable();
     }
 
-    componentWillUpdate() {
-        console.log('atualizado')
+    componentDidUpdate(prevProps, prevStatus) {
+        
     }
 
     defineImages() {
         let suitImg;
         let centerImg;
-
         switch(this.props.suit) {
             case "spades":
                 suitImg = spades;
@@ -71,8 +82,7 @@ export default class Card extends Component {
             default:
                 centerImg = suitImg;
         }
-
-        this.setState(state => ({...state, suitImg: suitImg, centerImg: centerImg}));
+        this.setState({suitImg: suitImg, centerImg: centerImg});
     }
 
     makeDraggable() {
@@ -81,7 +91,11 @@ export default class Card extends Component {
                 $("#" + this.props.type + "-" + this.props.suit + "-" + this.props.label).draggable(
                     {
                         containment: "#game-screen-table", 
-                        scroll: false                    
+                        scroll: false,
+                        revert: 'invalid',
+                        stop: function( event, ui ) {
+                            console.log(ui)
+                        }                    
                     }
                 );
             }
@@ -89,21 +103,35 @@ export default class Card extends Component {
     }
 
     flipCard(currentTarget) {
-        let cardFlip = new Audio(cardFlipSound);
-        cardFlip.volume = 0.2;
-        cardFlip.play();
-        this.setState(state => ({...state, flipped: !state.flipped}));
-        if(this.state.flipped) {
-            currentTarget.firstChild.style.transform = "rotateY(0deg)";
-        }else {
-            currentTarget.firstChild.style.transform = "rotateY(180deg)";
+        if(this.state.canFlip) {
+            let cardFlip = new Audio(cardFlipSound);
+            cardFlip.volume = 0.2;
+            cardFlip.play();
+    
+            this.setState(state => ({flipped: !state.flipped}), 
+                () => {
+                    let transformParameters = "";
+                    if(this.state.inDiscardPile) {
+                        if(this.props.game === "klondike") {
+                            transformParameters += "translate(120%, 0px) ";
+                        }
+                        this.setState(state => ({inDiscardPile: !state.inDiscardPile, inFlippedPile: true, canFlip: false}), () => {
+                            setTimeout(() => {
+                                this.props.changePile(this.state);
+                            }, 600)
+                        })
+                    }
+                    transformParameters += "rotateY(180deg)";
+                    currentTarget.firstChild.style.transform = transformParameters; 
+                }
+            );
         }
     }
 
     render() {
         return (
             <div className="card-container" id={this.props.type + "-" + this.props.suit + "-" + this.props.label} style={{zIndex: this.props.currentOrder}} onClick={(e) => this.flipCard(e.currentTarget)}>
-                <div className="card-container-inner">
+                <div className="card-container-inner" style={{transform: this.state.flipped ? 'rotateY(180deg)' : 'rotateY(0deg)'}}>
                     <div className="card-back">
                         <img src={require("./../../../../../assets/img/back-cards/darkback3.png")} alt="back-card"/>
                     </div>

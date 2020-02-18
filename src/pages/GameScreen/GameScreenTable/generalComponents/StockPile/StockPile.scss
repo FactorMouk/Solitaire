@@ -1,0 +1,5 @@
+.stock-pile {
+    display: grid;
+    grid-column: 1 / span 2;
+    grid-template-columns: repeat(2, 1fr);
+}

@@ -5,9 +5,6 @@ import UndoIcon from '@material-ui/icons/Undo';
 import './GameScreenFooter.scss';
 
 export default class GameScreenFooter extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         return (

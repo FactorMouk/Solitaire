@@ -26,9 +26,10 @@ export default class CardsColumn extends Component {
                         type={card.type} 
                         suit={card.suit} 
                         label={card.label} 
-                        flipped={card.flipped}
-                        canFlip={currentOrder === this.state.currentCards.length -1 ? true : false} 
-                        draggable={card.draggable} 
+                        flipped={currentOrder === this.state.currentCards.length -1 ? true : false}
+                        canFlip={false} 
+                        draggable={card.draggable}
+                        currentOrder={currentOrder} 
                         inDiscardPile={false}
                         inFlippedPile={false}
                         columnPile={this.props.columnNumber}

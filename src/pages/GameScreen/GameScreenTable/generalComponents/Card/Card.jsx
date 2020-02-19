@@ -15,7 +15,6 @@ import queen from './../../../../../assets/icons/cards/queen.png';
 import jack from './../../../../../assets/icons/cards/jack.png';
 
 import cardFlipSound from './../../../../../assets/sounds/cardFlip.mp3';
-
 export default class Card extends Component {
 
     initialState = {
@@ -26,6 +25,7 @@ export default class Card extends Component {
         flipped: this.props.flipped,
         canFlip: this.props.canFlip,
         draggable: this.props.draggable,
+        currentOrder: this.props.currentOrder,
         inDiscardPile: this.props.inDiscardPile,
         inFlippedPile: this.props.inFlippedPile,
         columnPile: this.props.columnPile,
@@ -36,8 +36,10 @@ export default class Card extends Component {
     constructor(props) {
         super(props);
         this.state = {...this.initialState};
-        this.flipCard = this.flipCard.bind(this);
         this.defineImages = this.defineImages.bind(this);
+        this.makeDraggable = this.makeDraggable.bind(this);
+        this.flipCard = this.flipCard.bind(this);
+        this.setCardTop = this.setCardTop.bind(this);
     }
     
     componentDidMount() {
@@ -129,9 +131,22 @@ export default class Card extends Component {
         }
     }
 
+    setCardTop() {
+        if(this.state.columnPile !== -1) {
+            let currentTop = $("#" + this.props.id).css("top");
+            if(currentTop) {
+                return (parseInt(currentTop.substring(0, currentTop.indexOf('p'))) + (this.state.currentOrder * 30)).toString() + 'px';
+            }
+        }
+    }
+
     render() {
         return (
-            <div className="card-container" id={this.props.type + "-" + this.props.suit + "-" + this.props.label} style={{zIndex: this.props.currentOrder}} onClick={(e) => this.flipCard(e.currentTarget)}>
+            <div 
+                className="card-container" 
+                id={this.props.id} 
+                style={{zIndex: this.state.currentOrder, top: this.setCardTop()}} 
+                onClick={(e) => this.flipCard(e.currentTarget)}>
                 <div className="card-container-inner" style={{transform: this.state.flipped ? 'rotateY(180deg)' : 'rotateY(0deg)'}}>
                     <div className="card-back">
                         <img src={require("./../../../../../assets/img/back-cards/darkback3.png")} alt="back-card"/>

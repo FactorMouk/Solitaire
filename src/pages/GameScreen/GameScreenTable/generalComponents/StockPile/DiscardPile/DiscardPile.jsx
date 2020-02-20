@@ -51,7 +51,8 @@ export default class DiscardPile extends Component {
                         label={card.label} 
                         flipped={card.flipped}
                         canFlip={currentOrder === this.state.currentCards.length -1 ? true : false} 
-                        draggable={card.draggable} 
+                        draggable={card.draggable}
+                        isDropShowed={false} 
                         currentOrder={currentOrder+1000}
                         inDiscardPile={true}
                         inFlippedPile={false}

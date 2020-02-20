@@ -8,25 +8,50 @@ import CardsColumn from '../../generalComponents/CardsColumn/CardsColumn';
 
 export default class KlondikeTable extends Component {
 
+    initialState = {
+        cards: [],
+        distribution: {
+            discardPile: [],
+            flippedPile: [],
+            cardsPiles: [
+                {
+                    dropShowed: false,
+                    cards: []
+                },
+                {
+                    dropShowed: false,
+                    cards: []
+                },
+                {
+                    dropShowed: false,
+                    cards: []
+                },
+                {
+                    dropShowed: false,
+                    cards: []
+                },
+                {
+                    dropShowed: false,
+                    cards: []
+                },
+                {
+                    dropShowed: false,
+                    cards: []
+                },
+                {
+                    dropShowed: false,
+                    cards: []
+                }
+            ]
+        }
+    }
+
     constructor(props) {
         super(props);
-        this.state = {
-            cards: [],
-            initialDistribution: {
-                discardPile: [],
-                flippedPile: [],
-                cardsPile1: [],
-                cardsPile2: [],
-                cardsPile3: [],
-                cardsPile4: [],
-                cardsPile5: [],
-                cardsPile6: [],
-                cardsPile7: [],
-            },
-            currentDistribution: null
-        }
+        this.state = {...this.initialState};
         this.generateCards = this.generateCards.bind(this);
         this.shuffleCards = this.shuffleCards.bind(this);
+        this.showColumnsDrops = this.showColumnsDrops.bind(this);
     }
 
     componentDidMount() {
@@ -43,10 +68,12 @@ export default class KlondikeTable extends Component {
                     {
                         id: types[j] + "-" + suits[i] + "-0", 
                         type: types[j], 
-                        suit: suits[i], label: "0", 
+                        suit: suits[i], 
+                        label: "0", 
                         flipped: false,
                         canFlip: false,
-                        draggable: true, 
+                        draggable: true,
+                        isDropShowed: false, 
                         inDiscardPile: false,
                         inFlippedPile: false,
                         columnPile: -1,
@@ -65,37 +92,47 @@ export default class KlondikeTable extends Component {
         let amount = 52;
         let numbersArray = [];
         let cards = [...this.state.cards];
-        let initialDistribution = {...this.state.initialDistribution};
+        let distribution = {...this.state.distribution};
         for(let i = 0; i < 52; i++) {
             numbersArray.push(i);
         }
         for(let i = 0; i < 24; i++) {
             let randomNumber = Math.floor(Math.random() * amount);
             let removedElement = cards.splice(randomNumber, 1)[0];
-            initialDistribution.discardPile.push(removedElement);
+            distribution.discardPile.push(removedElement);
             amount--;
         }
         for(let i = 0; i < 28; i++) {
             let randomNumber = Math.floor(Math.random() * amount);
             let removedElement = cards.splice(randomNumber, 1)[0];
             if(i < 1) {
-                initialDistribution.cardsPile1.push(removedElement);
+                distribution.cardsPiles[0].cards.push(removedElement);
             }else if(i < 3) {
-                initialDistribution.cardsPile2.push(removedElement);
+                distribution.cardsPiles[1].cards.push(removedElement);
             }else if(i < 6) {
-                initialDistribution.cardsPile3.push(removedElement);
+                distribution.cardsPiles[2].cards.push(removedElement);
             }else if(i < 10) {
-                initialDistribution.cardsPile4.push(removedElement);
+                distribution.cardsPiles[3].cards.push(removedElement);
             }else if(i < 15) {
-                initialDistribution.cardsPile5.push(removedElement);
+                distribution.cardsPiles[4].cards.push(removedElement);
             }else if(i < 21) {
-                initialDistribution.cardsPile6.push(removedElement);
+                distribution.cardsPiles[5].cards.push(removedElement);
             }else if(i >= 21) {
-                initialDistribution.cardsPile7.push(removedElement);
+                distribution.cardsPiles[6].cards.push(removedElement);
             }
             amount--;
         }
-        this.setState({initialDistribution: initialDistribution, currentDistribution: initialDistribution}, () => console.log(this.state.initialDistribution));
+        this.setState({distribution: distribution});
+    }
+
+    showColumnsDrops(show, columnCallee) {
+        let distribution = {...this.state.distribution};
+        for(let i = 0; i < distribution.cardsPiles.length; i++) {
+            if(i !== columnCallee) {
+                distribution.cardsPiles[i].dropShowed = show;
+            }
+        }
+        this.setState({distribution: distribution})
     }
 
     render() {
@@ -103,8 +140,8 @@ export default class KlondikeTable extends Component {
             <div className="klondike-table">
                 <StockPile 
                     game="klondike" 
-                    discardCards={this.state.initialDistribution.discardPile}
-                    flippedCards={this.state.initialDistribution.flippedPile}
+                    discardCards={this.state.distribution.discardPile}
+                    flippedCards={this.state.distribution.flippedPile}
                 >
                 </StockPile>
                 <div className="suits-piles-container">
@@ -113,13 +150,13 @@ export default class KlondikeTable extends Component {
                     <SuitsPile></SuitsPile>
                     <SuitsPile></SuitsPile>
                 </div>
-                <CardsColumn cards={this.state.initialDistribution.cardsPile1}></CardsColumn>
-                <CardsColumn cards={this.state.initialDistribution.cardsPile2}></CardsColumn>
-                <CardsColumn cards={this.state.initialDistribution.cardsPile3}></CardsColumn>
-                <CardsColumn cards={this.state.initialDistribution.cardsPile4}></CardsColumn>
-                <CardsColumn cards={this.state.initialDistribution.cardsPile5}></CardsColumn>
-                <CardsColumn cards={this.state.initialDistribution.cardsPile6}></CardsColumn>
-                <CardsColumn cards={this.state.initialDistribution.cardsPile7}></CardsColumn>                
+                <CardsColumn id={0} cards={this.state.distribution.cardsPiles[0].cards} dropShowed={this.state.distribution.cardsPiles[0].dropShowed} showColumnsDrops={this.showColumnsDrops.bind(this)}></CardsColumn>
+                <CardsColumn id={1} cards={this.state.distribution.cardsPiles[1].cards} dropShowed={this.state.distribution.cardsPiles[1].dropShowed} showColumnsDrops={this.showColumnsDrops.bind(this)}></CardsColumn>
+                <CardsColumn id={2} cards={this.state.distribution.cardsPiles[2].cards} dropShowed={this.state.distribution.cardsPiles[2].dropShowed} showColumnsDrops={this.showColumnsDrops.bind(this)}></CardsColumn>
+                <CardsColumn id={3} cards={this.state.distribution.cardsPiles[3].cards} dropShowed={this.state.distribution.cardsPiles[3].dropShowed} showColumnsDrops={this.showColumnsDrops.bind(this)}></CardsColumn>
+                <CardsColumn id={4} cards={this.state.distribution.cardsPiles[4].cards} dropShowed={this.state.distribution.cardsPiles[4].dropShowed} showColumnsDrops={this.showColumnsDrops.bind(this)}></CardsColumn>
+                <CardsColumn id={5} cards={this.state.distribution.cardsPiles[5].cards} dropShowed={this.state.distribution.cardsPiles[5].dropShowed} showColumnsDrops={this.showColumnsDrops.bind(this)}></CardsColumn>
+                <CardsColumn id={6} cards={this.state.distribution.cardsPiles[6].cards} dropShowed={this.state.distribution.cardsPiles[6].dropShowed} showColumnsDrops={this.showColumnsDrops.bind(this)}></CardsColumn>                
             </div>
         )
     }

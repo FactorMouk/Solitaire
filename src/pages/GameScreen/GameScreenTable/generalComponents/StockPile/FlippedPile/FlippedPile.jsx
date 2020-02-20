@@ -48,7 +48,8 @@ export default class FlippedPile extends Component {
                         label={card.label} 
                         flipped={card.flipped}
                         canFlip={false} 
-                        draggable={card.draggable} 
+                        draggable={card.draggable}
+                        isDropShowed={false}  
                         currentOrder={currentOrder}
                         inDiscardPile={false}
                         inFlippedPile={true}

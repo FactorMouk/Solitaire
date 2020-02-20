@@ -25,6 +25,7 @@ export default class Card extends Component {
         flipped: this.props.flipped,
         canFlip: this.props.canFlip,
         draggable: this.props.draggable,
+        isDropShowed: this.props.isDropShowed,
         currentOrder: this.props.currentOrder,
         inDiscardPile: this.props.inDiscardPile,
         inFlippedPile: this.props.inFlippedPile,
@@ -45,11 +46,15 @@ export default class Card extends Component {
     componentDidMount() {
         this.defineImages();
         this.makeDraggable();
+        this.setCardTop();
     }
 
     componentDidUpdate(prevProps, prevStatus) {
         if(this.props.canFlip !== prevProps.canFlip) {
             this.setState({canFlip: this.props.canFlip});
+        }
+        if(this.props.isDropShowed !== prevProps.isDropShowed) {
+            this.setState({isDropShowed: this.props.isDropShowed});
         }
     }
 
@@ -96,8 +101,21 @@ export default class Card extends Component {
                         containment: "#game-screen-table", 
                         scroll: false,
                         revert: true,
-                        stop: function( event, ui ) {
-                            console.log(ui)
+                        revertDuration: 350,
+                        drag: (event, ui) => {
+                            $('#' + this.props.id).css("z-index", '9999999');
+                        },
+                        start: (event, ui) => {
+                            this.props.showColumnsDrops(true);
+                        },
+                        stop: ( event, ui ) => {
+                            $('#' + this.props.id).css(
+                                {
+                                    "z-index": this.state.currentOrder,
+                                    "left": "auto"
+                                }
+                            );
+                            this.props.showColumnsDrops(false);
                         }                    
                     }
                 );
@@ -135,7 +153,7 @@ export default class Card extends Component {
         if(this.state.columnPile !== -1) {
             let currentTop = $("#" + this.props.id).css("top");
             if(currentTop) {
-                return (parseInt(currentTop.substring(0, currentTop.indexOf('p'))) + (this.state.currentOrder * 30)).toString() + 'px';
+                $("#" + this.props.id).css("top", (parseInt(currentTop.substring(0, currentTop.indexOf('p'))) + (this.state.currentOrder * 30)).toString() + 'px');
             }
         }
     }
@@ -145,7 +163,7 @@ export default class Card extends Component {
             <div 
                 className="card-container" 
                 id={this.props.id} 
-                style={{zIndex: this.state.currentOrder, top: this.setCardTop()}} 
+                style={{zIndex: this.state.currentOrder}} 
                 onClick={(e) => this.flipCard(e.currentTarget)}>
                 <div className="card-container-inner" style={{transform: this.state.flipped ? 'rotateY(180deg)' : 'rotateY(0deg)'}}>
                     <div className="card-back">
@@ -173,6 +191,7 @@ export default class Card extends Component {
                         </div>
                     </div>
                 </div>
+                { this.state.isDropShowed && <div className="card-container-drop-area"></div>}
             </div>
         )
     }

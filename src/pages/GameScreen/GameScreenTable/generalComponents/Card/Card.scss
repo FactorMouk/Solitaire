@@ -97,4 +97,14 @@
             backface-visibility: hidden;
         }
     }
+
+    .card-container-drop-area {
+        position: absolute;
+        top: 30px;
+        height: 135px;
+        width: 100px;
+        background-color: #7ea0b721;
+        border: 3px dashed #36494e;
+        border-radius: 5px;
+    }
 }

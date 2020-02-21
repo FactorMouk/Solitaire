@@ -9,13 +9,8 @@ import Card from '../../Card/Card';
 
 export default class FlippedPile extends Component {
 
-    initialState = {
-        currentCards: this.props.cards       
-    }
-
     constructor(props) {
         super(props);
-        this.state = {...this.initialState};
         this.showColumnsDrops = this.showColumnsDrops.bind(this);
     }
 
@@ -27,20 +22,14 @@ export default class FlippedPile extends Component {
         });
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.cards !== prevProps.cards) {
-            this.setState({currentCards: this.props.cards})
-        }
-    }
-
-    showColumnsDrops(show) {
-        this.props.showColumnsDrops(show, -1);
+    showColumnsDrops(cardInDragState, show) {
+        this.props.showColumnsDrops(cardInDragState, show, -1);
     }
 
     render() {
         return (
             <div id="flipped-pile" className="flipped-pile">
-                {this.state.currentCards.map((card, currentOrder) => (
+                {this.props.cards.map((card, currentOrder) => (
                     <Card
                         key={card.id} 
                         game={this.props.game}
@@ -48,7 +37,7 @@ export default class FlippedPile extends Component {
                         type={card.type} 
                         suit={card.suit} 
                         label={card.label} 
-                        flipped={card.flipped}
+                        flipped={true}
                         canFlip={false} 
                         draggable={true}
                         isDropShowed={false}  

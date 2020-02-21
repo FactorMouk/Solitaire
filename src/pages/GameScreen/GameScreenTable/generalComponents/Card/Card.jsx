@@ -13,54 +13,35 @@ import hearts from './../../../../../assets/icons/cards/hearts.png';
 import king from './../../../../../assets/icons/cards/king.png';
 import queen from './../../../../../assets/icons/cards/queen.png';
 import jack from './../../../../../assets/icons/cards/jack.png';
-
-import cardFlipSound from './../../../../../assets/sounds/cardFlip.mp3';
 export default class Card extends Component {
-
-    initialState = {
-        id: this.props.id,
-        type:this.props.type,
-        suit:this.props.suit,
-        label:this.props.label, 
-        flipped: this.props.flipped,
-        canFlip: this.props.canFlip,
-        draggable: this.props.draggable,
-        isDropShowed: this.props.isDropShowed,
-        currentOrder: this.props.currentOrder,
-        inDiscardPile: this.props.inDiscardPile,
-        inFlippedPile: this.props.inFlippedPile,
-        columnPile: this.props.columnPile,
-        suitImg: null, 
-        centerImg: null,
-    }
 
     constructor(props) {
         super(props);
-        this.state = {...this.initialState};
-        this.defineImages = this.defineImages.bind(this);
+        this.getSuitImage = this.getSuitImage.bind(this);
+        this.getCenterImage = this.getCenterImage.bind(this);
         this.makeDraggable = this.makeDraggable.bind(this);
-        this.flipCard = this.flipCard.bind(this);
+        this.makeDropArea = this.makeDropArea.bind(this);
+        this.checkIfCanFit = this.checkIfCanFit.bind(this);
+        this.discardCardInStockPile = this.discardCardInStockPile.bind(this);
         this.setCardTop = this.setCardTop.bind(this);
     }
     
     componentDidMount() {
-        this.defineImages();
         this.makeDraggable();
         this.setCardTop();
     }
 
-    componentDidUpdate(prevProps, prevStatus) {
-        if(this.props.canFlip !== prevProps.canFlip) {
-            this.setState({canFlip: this.props.canFlip});
+    componentDidUpdate(prevProps) {
+        if(this.props.draggable !== prevProps.draggable) {
+            this.makeDraggable();
         }
         if(this.props.isDropShowed !== prevProps.isDropShowed) {
-            this.setState({isDropShowed: this.props.isDropShowed});
+             this.makeDropArea()
         }
     }
 
-    defineImages() {
+    getSuitImage() {
         let suitImg;
-        let centerImg;
         switch(this.props.suit) {
             case "spades":
                 suitImg = spades;
@@ -76,7 +57,11 @@ export default class Card extends Component {
                 break;
             default:
         }
+        return suitImg;     
+    }
 
+    getCenterImage() {
+        let centerImg;
         switch(this.props.type) {
             case "K":
                 centerImg = king;
@@ -88,15 +73,15 @@ export default class Card extends Component {
                 centerImg = jack;
                 break;
             default:
-                centerImg = suitImg;
+                centerImg = this.getSuitImage();
         }
-        this.setState({suitImg: suitImg, centerImg: centerImg});
+        return centerImg;
     }
 
     makeDraggable() {
         $(() => {
             if(this.props.draggable){
-                $("#" + this.props.type + "-" + this.props.suit + "-" + this.props.label).draggable(
+                $("#" + this.props.id).draggable(
                     {
                         containment: "#game-screen-table", 
                         scroll: false,
@@ -106,15 +91,11 @@ export default class Card extends Component {
                             $('#' + this.props.id).css("z-index", '9999999');
                         },
                         start: (event, ui) => {
-                            this.props.showColumnsDrops(true);
+                            this.props.showColumnsDrops(this.props, true);
                         },
                         stop: ( event, ui ) => {
-                            $('#' + this.props.id).css(
-                                {
-                                    "z-index": this.state.currentOrder,
-                                    "left": "auto"
-                                }
-                            );
+                            $('#' + this.props.id).css("left", "auto");
+                            $('#' + this.props.id).css("z-index", this.props.currentOrder);
                             this.props.showColumnsDrops(false);
                         }                    
                     }
@@ -123,37 +104,54 @@ export default class Card extends Component {
         });
     }
 
-    flipCard(currentTarget) {
-        if(this.state.canFlip) {
-            let cardFlip = new Audio(cardFlipSound);
-            cardFlip.volume = 0.2;
-            cardFlip.play();
-    
-            this.setState(state => ({flipped: !state.flipped}), 
-                () => {
-                    let transformParameters = "";
-                    if(this.state.inDiscardPile) {
-                        if(this.props.game === "klondike") {
-                            transformParameters += "translate(120%, 0px) ";
-                        }
-                        this.setState(state => ({inDiscardPile: !state.inDiscardPile, inFlippedPile: true, canFlip: false}), () => {
-                            setTimeout(() => {
-                                this.props.discardCard(this.state);
-                            }, 150)
-                        })
-                    }
-                    transformParameters += "rotateY(180deg)";
-                    currentTarget.firstChild.style.transform = transformParameters; 
+    makeDropArea() {
+        $(() => {
+            $("#" + this.props.id + "-drop-area").droppable(
+                {
+                    drop: (event, ui) => {
+                        this.checkIfCanFit(ui.draggable[0].id, ui.draggable[0].parentNode.id);
+                    }                  
                 }
             );
+            
+        })
+    }
+
+    checkIfCanFit(cardId, cardColumn) {
+        if(this.props.game === 'klondike') {
+            let types = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
+            let isSmaller = types.indexOf(this.props.type) === types.indexOf(cardId.substring(0, cardId.indexOf('-'))) + 1;
+            let checkIfAnotherColor = () => {
+                let cardDroppedSuit = cardId.substring(cardId.indexOf('-') + 1, cardId.lastIndexOf('-'));
+                if((this.props.suit === 'spades' || this.props.suit === 'clubs') &&
+                    (cardDroppedSuit === 'diamonds' || cardDroppedSuit === 'hearts')
+                ) {
+                    return true;
+                }else if((this.props.suit === 'diamonds' || this.props.suit === 'hearts') &&
+                (cardDroppedSuit === 'spades' || cardDroppedSuit === 'clubs')
+                ) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            if(isSmaller && checkIfAnotherColor()) {
+                this.props.changeColumnOfCard(cardColumn);
+            }
+        }
+    }
+
+    discardCardInStockPile(currentTarget) {
+        if(this.props.inDiscardPile) {
+            this.props.discardCardInStockPile(currentTarget);
         }
     }
 
     setCardTop() {
-        if(this.state.columnPile !== -1) {
+        if(this.props.columnPile !== -1) {
             let currentTop = $("#" + this.props.id).css("top");
             if(currentTop) {
-                $("#" + this.props.id).css("top", (parseInt(currentTop.substring(0, currentTop.indexOf('p'))) + (this.state.currentOrder * 30)).toString() + 'px');
+                $("#" + this.props.id).css("top", (parseInt(currentTop.substring(0, currentTop.indexOf('p'))) + (this.props.currentOrder * 30)).toString() + 'px');
             }
         }
     }
@@ -163,9 +161,9 @@ export default class Card extends Component {
             <div 
                 className="card-container" 
                 id={this.props.id} 
-                style={{zIndex: this.state.currentOrder}} 
-                onClick={(e) => this.flipCard(e.currentTarget)}>
-                <div className="card-container-inner" style={{transform: this.state.flipped ? 'rotateY(180deg)' : 'rotateY(0deg)'}}>
+                style={{zIndex: this.props.currentOrder}} 
+                onClick={(e) => this.discardCardInStockPile(e.currentTarget)}>
+                <div className="card-container-inner" style={{transform: this.props.flipped ? 'rotateY(180deg)' : 'rotateY(0deg)'}}>
                     <div className="card-back">
                         <img src={require("./../../../../../assets/img/back-cards/darkback3.png")} alt="back-card"/>
                     </div>
@@ -175,15 +173,15 @@ export default class Card extends Component {
                                 { this.props.type }
                             </div>
                             <div className="card-suit">
-                                <img src={this.state.suitImg} alt="suit"></img>
+                                <img src={this.getSuitImage()} alt="suit"></img>
                             </div>
                         </div>
                         <div className="card-center">
-                            <img src={this.state.centerImg} alt="center"></img>
+                            <img src={this.getCenterImage() } alt="center"></img>
                         </div>
                         <div className="card-bottom">
                             <div className="card-suit reverse">
-                                <img src={this.state.suitImg} alt="suit"></img>
+                                <img src={this.getSuitImage()} alt="suit"></img>
                             </div>
                             <div className={"card-type reverse " + (this.props.suit === "diamonds" || this.props.suit === "hearts" ? "red-type" : "dark-type")}>
                                 { this.props.type }
@@ -191,7 +189,13 @@ export default class Card extends Component {
                         </div>
                     </div>
                 </div>
-                { this.state.isDropShowed && <div className="card-container-drop-area"></div>}
+                { 
+                    this.props.isDropShowed && 
+                    <div 
+                        id={this.props.id + "-drop-area"} 
+                        className="card-container-drop-area">
+                    </div>
+                }
             </div>
         )
     }

@@ -6,25 +6,14 @@ import Card from '../../Card/Card';
 
 export default class DiscardPile extends Component {
 
-    initialState = {
-        currentCards: this.props.cards
-    }
-
     constructor(props) {
         super(props);
-        this.state = {...this.initialState};
-        this.discardCard = this.discardCard.bind(this);
+        this.discardCardInStockPile = this.discardCardInStockPile.bind(this);
         this.returnCards = this.returnCards.bind(this);
     }
 
-    componentDidUpdate(prevProps, prevStatus) {
-        if (this.props.cards !== prevProps.cards) {
-            this.setState({currentCards: this.props.cards})
-        }
-    }
-
-    discardCard(cardState) {
-        this.props.discardCard(cardState);
+    discardCardInStockPile(cardTarget) {
+        this.props.discardCardInStockPile(cardTarget);
     }
 
     returnCards() {
@@ -34,7 +23,7 @@ export default class DiscardPile extends Component {
     render() {
         return (
             <div id="discard-pile" className="discard-pile">
-                {this.state.currentCards.map((card, currentOrder) => (
+                {this.props.cards.map((card, currentOrder) => (
                     <Card
                         key={card.id} 
                         game={this.props.game}
@@ -43,13 +32,13 @@ export default class DiscardPile extends Component {
                         suit={card.suit} 
                         label={card.label} 
                         flipped={card.flipped}
-                        canFlip={currentOrder === this.state.currentCards.length -1 ? true : false} 
+                        canFlip={currentOrder === this.props.cards.length -1 ? true : false} 
                         draggable={false}
                         isDropShowed={false} 
                         currentOrder={currentOrder+1000}
                         inDiscardPile={true}
                         inFlippedPile={false}
-                        discardCard={this.discardCard.bind(this)}
+                        discardCardInStockPile={this.discardCardInStockPile.bind(this)}
                         columnPile={card.columnPile}
                     >
                     </Card>

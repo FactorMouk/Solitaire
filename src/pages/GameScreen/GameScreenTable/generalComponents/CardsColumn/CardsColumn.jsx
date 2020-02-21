@@ -6,32 +6,30 @@ import Card from './../Card/Card';
 
 export default class CardsColumn extends Component {
 
-    initialState = {
-        dropShowed: this.props.dropShowed,
-        currentCards: this.props.cards
-    }
-
     constructor(props) {
         super(props);
-        this.state = {...this.initialState};
         this.showColumnsDrops = this.showColumnsDrops.bind(this);
+        this.changeColumnOfCard = this.changeColumnOfCard.bind(this);
+        this.flipCard = this.flipCard.bind(this);
     }
 
-    componentDidUpdate(prevProps) {
-        if(this.props.dropShowed !== prevProps.dropShowed) {
-            this.setState({dropShowed: this.props.dropShowed});
-        }
+    showColumnsDrops(cardInDragState, show) {
+        this.props.showColumnsDrops(cardInDragState, show, this.props.id);
     }
 
-    showColumnsDrops(show) {
-        this.props.showColumnsDrops(show, this.props.id);
+    changeColumnOfCard(cardColumn) {
+        this.props.changeColumnOfCard(this.props.id, cardColumn);
+    }
+
+    flipCard(cardId, cardTarget) {
+        this.props.flipCard(cardId, this.props.id, cardTarget);
     }
 
     render() {
         return (
-            <div className="cards-column">
+            <div id={this.props.id} className="cards-column">
                 <div className="card-area"></div>
-                {this.state.currentCards.map((card, currentOrder) => (
+                {this.props.cards.map((card, currentOrder) => (
                     <Card
                         key={card.id} 
                         game={this.props.game}
@@ -39,15 +37,17 @@ export default class CardsColumn extends Component {
                         type={card.type} 
                         suit={card.suit} 
                         label={card.label} 
-                        flipped={currentOrder === this.state.currentCards.length -1 ? true : false}
-                        canFlip={false} 
-                        draggable={currentOrder === this.state.currentCards.length -1 ? true : false}
-                        isDropShowed={currentOrder === this.state.currentCards.length -1 && this.state.dropShowed ? true : false}
+                        flipped={currentOrder === this.props.cards.length -1 || card.flipped ? true : false}
+                        canFlip={false}
+                        flipCard={this.flipCard.bind(this)} 
+                        draggable={currentOrder === this.props.cards.length -1 ? true : false}
+                        isDropShowed={currentOrder === this.props.cards.length -1 && this.props.dropShowed ? true : false}
                         currentOrder={currentOrder} 
                         inDiscardPile={false}
                         inFlippedPile={false}
                         columnPile={this.props.columnNumber}
                         showColumnsDrops={this.showColumnsDrops.bind(this)}
+                        changeColumnOfCard={this.changeColumnOfCard.bind(this)}
                     >
                     </Card>
                 ))}

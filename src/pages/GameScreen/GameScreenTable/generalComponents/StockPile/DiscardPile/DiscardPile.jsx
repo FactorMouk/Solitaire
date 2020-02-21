@@ -13,7 +13,7 @@ export default class DiscardPile extends Component {
     constructor(props) {
         super(props);
         this.state = {...this.initialState};
-        this.changePile = this.changePile.bind(this);
+        this.discardCard = this.discardCard.bind(this);
         this.returnCards = this.returnCards.bind(this);
     }
 
@@ -23,15 +23,8 @@ export default class DiscardPile extends Component {
         }
     }
 
-    changePile(cardState) {
-        this.props.changePile(cardState);
-        let currentCards = [...this.state.currentCards];
-        let index = currentCards.findIndex((card) => card.id === cardState.id);
-        currentCards.splice(index, 1);
-        if(currentCards[currentCards.length-1]){
-            currentCards[currentCards.length-1].canFlip = true;
-        }
-        this.setState({currentCards: currentCards})
+    discardCard(cardState) {
+        this.props.discardCard(cardState);
     }
 
     returnCards() {
@@ -51,12 +44,12 @@ export default class DiscardPile extends Component {
                         label={card.label} 
                         flipped={card.flipped}
                         canFlip={currentOrder === this.state.currentCards.length -1 ? true : false} 
-                        draggable={card.draggable}
+                        draggable={false}
                         isDropShowed={false} 
                         currentOrder={currentOrder+1000}
                         inDiscardPile={true}
                         inFlippedPile={false}
-                        changePile={this.changePile.bind(this)}
+                        discardCard={this.discardCard.bind(this)}
                         columnPile={card.columnPile}
                     >
                     </Card>

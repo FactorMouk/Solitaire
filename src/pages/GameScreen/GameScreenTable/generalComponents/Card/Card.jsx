@@ -138,7 +138,7 @@ export default class Card extends Component {
                         }
                         this.setState(state => ({inDiscardPile: !state.inDiscardPile, inFlippedPile: true, canFlip: false}), () => {
                             setTimeout(() => {
-                                this.props.changePile(this.state);
+                                this.props.discardCard(this.state);
                             }, 150)
                         })
                     }

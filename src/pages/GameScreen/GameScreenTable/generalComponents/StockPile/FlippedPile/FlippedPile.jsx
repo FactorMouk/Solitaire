@@ -9,12 +9,14 @@ import Card from '../../Card/Card';
 
 export default class FlippedPile extends Component {
 
+    initialState = {
+        currentCards: this.props.cards       
+    }
+
     constructor(props) {
         super(props);
-        this.state = {
-            currentCards: []        
-        }
-        this.changePile = this.changePile.bind(this);
+        this.state = {...this.initialState};
+        this.showColumnsDrops = this.showColumnsDrops.bind(this);
     }
 
     componentDidMount() {
@@ -25,14 +27,14 @@ export default class FlippedPile extends Component {
         });
     }
 
-    componentDidUpdate(prevProps, prevStatus) {
+    componentDidUpdate(prevProps) {
         if (this.props.cards !== prevProps.cards) {
             this.setState({currentCards: this.props.cards})
         }
     }
 
-    changePile() {
-
+    showColumnsDrops(show) {
+        this.props.showColumnsDrops(show, -1);
     }
 
     render() {
@@ -48,13 +50,13 @@ export default class FlippedPile extends Component {
                         label={card.label} 
                         flipped={card.flipped}
                         canFlip={false} 
-                        draggable={card.draggable}
+                        draggable={true}
                         isDropShowed={false}  
                         currentOrder={currentOrder}
                         inDiscardPile={false}
                         inFlippedPile={true}
-                        changePile={this.changePile.bind(this)}
                         columnPile={card.columnPile}
+                        showColumnsDrops={this.showColumnsDrops.bind(this)}
                     >
                     </Card>
                 ))}

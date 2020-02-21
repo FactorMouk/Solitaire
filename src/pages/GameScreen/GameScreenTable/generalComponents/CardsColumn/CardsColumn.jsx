@@ -30,6 +30,7 @@ export default class CardsColumn extends Component {
     render() {
         return (
             <div className="cards-column">
+                <div className="card-area"></div>
                 {this.state.currentCards.map((card, currentOrder) => (
                     <Card
                         key={card.id} 

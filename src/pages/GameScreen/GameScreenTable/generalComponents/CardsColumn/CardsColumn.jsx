@@ -37,15 +37,15 @@ export default class CardsColumn extends Component {
                         type={card.type} 
                         suit={card.suit} 
                         label={card.label} 
-                        flipped={currentOrder === this.props.cards.length -1 || card.flipped ? true : false}
+                        flipped={(card.flipped || (currentOrder === this.props.cards.length -1)) ? true : false}
                         canFlip={false}
                         flipCard={this.flipCard.bind(this)} 
-                        draggable={currentOrder === this.props.cards.length -1 ? true : false}
+                        draggable={(currentOrder === this.props.cards.length -1) || card.draggable ? true : false}
                         isDropShowed={currentOrder === this.props.cards.length -1 && this.props.dropShowed ? true : false}
                         currentOrder={currentOrder} 
                         inDiscardPile={false}
                         inFlippedPile={false}
-                        columnPile={this.props.columnNumber}
+                        columnPile={this.props.id}
                         showColumnsDrops={this.showColumnsDrops.bind(this)}
                         changeColumnOfCard={this.changeColumnOfCard.bind(this)}
                     >

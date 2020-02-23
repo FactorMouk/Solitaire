@@ -33,7 +33,11 @@ export default class Card extends Component {
 
     componentDidUpdate(prevProps) {
         if(this.props.draggable !== prevProps.draggable) {
-            this.makeDraggable();
+            if(this.props.draggable) {
+                this.makeDraggable();
+            }else {
+                this.removeDraggable();
+            }
         }
         if(this.props.isDropShowed !== prevProps.isDropShowed) {
              this.makeDropArea()
@@ -81,22 +85,20 @@ export default class Card extends Component {
     makeDraggable() {
         $(() => {
             if(this.props.draggable){
-                $("#" + this.props.id).draggable(
+                $("#" + this.props.id + '_' + this.props.columnPile).draggable(
                     {
                         containment: "#game-screen-table", 
                         scroll: false,
                         revert: true,
                         revertDuration: 350,
-                        drag: (event, ui) => {
-                            $('#' + this.props.id).css("z-index", '9999999');
+                        start: () => {
+                            $('#' + this.props.id + '_' + this.props.columnPile).css("z-index", '9999999');
+                            this.props.showColumnsDrops({...this.props}, true);
                         },
-                        start: (event, ui) => {
-                            this.props.showColumnsDrops(this.props, true);
-                        },
-                        stop: ( event, ui ) => {
-                            $('#' + this.props.id).css("left", "auto");
-                            $('#' + this.props.id).css("z-index", this.props.currentOrder);
-                            this.props.showColumnsDrops(false);
+                        stop: () => {
+                            $('#' + this.props.id + '_' + this.props.columnPile).css("left", "auto");
+                            $('#' + this.props.id + '_' + this.props.columnPile).css("z-index", this.props.currentOrder);
+                            this.props.showColumnsDrops({...this.props}, false);
                         }                    
                     }
                 );
@@ -104,9 +106,15 @@ export default class Card extends Component {
         });
     }
 
+    removeDraggable() {
+        $(() => {
+            $("#" + this.props.id + '_' + this.props.columnPile).draggable('disable');
+        });
+    }
+
     makeDropArea() {
         $(() => {
-            $("#" + this.props.id + "-drop-area").droppable(
+            $("#" + this.props.id + '_' + this.props.columnPile + "-drop-area").droppable(
                 {
                     drop: (event, ui) => {
                         this.checkIfCanFit(ui.draggable[0].id, ui.draggable[0].parentNode.id);
@@ -148,10 +156,10 @@ export default class Card extends Component {
     }
 
     setCardTop() {
-        if(this.props.columnPile !== -1) {
-            let currentTop = $("#" + this.props.id).css("top");
+        if(this.props.columnPile !== 9999) {
+            let currentTop = $("#" + this.props.id + "_" + this.props.columnPile).css("top");
             if(currentTop) {
-                $("#" + this.props.id).css("top", (parseInt(currentTop.substring(0, currentTop.indexOf('p'))) + (this.props.currentOrder * 30)).toString() + 'px');
+                $("#" + this.props.id + "_" + this.props.columnPile).css("top", (parseInt(currentTop.substring(0, currentTop.indexOf('p'))) + (this.props.currentOrder * 30)).toString() + 'px');
             }
         }
     }
@@ -160,7 +168,7 @@ export default class Card extends Component {
         return (
             <div 
                 className="card-container" 
-                id={this.props.id} 
+                id={this.props.id + '_' + this.props.columnPile} 
                 style={{zIndex: this.props.currentOrder}} 
                 onClick={(e) => this.discardCardInStockPile(e.currentTarget)}>
                 <div className="card-container-inner" style={{transform: this.props.flipped ? 'rotateY(180deg)' : 'rotateY(0deg)'}}>
@@ -192,7 +200,7 @@ export default class Card extends Component {
                 { 
                     this.props.isDropShowed && 
                     <div 
-                        id={this.props.id + "-drop-area"} 
+                        id={this.props.id + '_' + this.props.columnPile + "-drop-area"} 
                         className="card-container-drop-area">
                     </div>
                 }

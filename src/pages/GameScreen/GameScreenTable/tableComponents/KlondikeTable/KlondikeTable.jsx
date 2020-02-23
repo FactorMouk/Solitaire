@@ -85,11 +85,11 @@ export default class KlondikeTable extends Component {
                         label: "0", 
                         flipped: false,
                         canFlip: false,
-                        draggable: true,
+                        draggable: false,
                         isDropShowed: false, 
                         inDiscardPile: false,
                         inFlippedPile: false,
-                        columnPile: -1
+                        columnPile: 9999
                     }
                 )
             }
@@ -164,7 +164,11 @@ export default class KlondikeTable extends Component {
                 currentDistribution.cardsPiles[i].dropShowed = show;
             }
         }
-        this.setState({currentDistribution: currentDistribution, currentCardInDrag: cardInDragState})
+        if(show) {
+            this.setState({currentDistribution: currentDistribution, currentCardInDrag: cardInDragState})
+        }else {
+            this.setState({currentCardInDrag: null})
+        }
     }
 
     changeColumnOfCard(dropColumn, dragColumn) {
@@ -174,11 +178,14 @@ export default class KlondikeTable extends Component {
         }else {
             currentDistribution.cardsPiles[parseInt(dragColumn)].cards.pop();
         }
-        let dropColumnCards = currentDistribution.cardsPiles[dropColumn].cards;
-        dropColumnCards[dropColumnCards.length-1].flipped = true;
-        dropColumnCards[dropColumnCards.length-1].draggable = true;
+        let dropColumnCards = {...currentDistribution.cardsPiles[dropColumn]};
+        let cardInTopDrop = dropColumnCards.cards[dropColumnCards.cards.length - 1];
+        if(cardInTopDrop) {
+            cardInTopDrop.flipped = true;
+            cardInTopDrop.draggable = false;
+        }
         this.cardSound();
-        dropColumnCards.push(this.state.currentCardInDrag);
+        dropColumnCards.cards.push(this.state.currentCardInDrag);
         this.setState({currentDistribution: currentDistribution});
     }
 

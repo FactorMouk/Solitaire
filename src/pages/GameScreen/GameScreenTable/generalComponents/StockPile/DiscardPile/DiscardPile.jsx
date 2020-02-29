@@ -22,7 +22,7 @@ export default class DiscardPile extends Component {
 
     render() {
         return (
-            <div id="discard-pile" className="discard-pile">
+            <div id={this.props.id} className="discard-pile">
                 {this.props.cards.map((card, currentOrder) => (
                     <Card
                         key={card.id} 
@@ -39,7 +39,7 @@ export default class DiscardPile extends Component {
                         inDiscardPile={true}
                         inFlippedPile={false}
                         discardCardInStockPile={this.discardCardInStockPile.bind(this)}
-                        columnPile={card.columnPile}
+                        columnPile={this.props.id}
                     >
                     </Card>
                 ))}

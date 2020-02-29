@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import $ from 'jquery';
-import 'jquery-ui/ui/core';
-import 'jquery-ui/ui/widgets/droppable';
 
 import './FlippedPile.scss';
 
@@ -14,21 +11,13 @@ export default class FlippedPile extends Component {
         this.showColumnsDrops = this.showColumnsDrops.bind(this);
     }
 
-    componentDidMount() {
-        $("#flipped-pile").droppable({
-            drop: function(event, ui) {
-                
-            }
-        });
-    }
-
-    showColumnsDrops(cardInDragState, show) {
-        this.props.showColumnsDrops(cardInDragState, show, -1);
+    showColumnsDrops(show) {
+        this.props.showColumnsDrops(show, this.props.id);
     }
 
     render() {
         return (
-            <div id="flipped-pile" className="flipped-pile">
+            <div id={this.props.id} className="flipped-pile">
                 {this.props.cards.map((card, currentOrder) => (
                     <Card
                         key={card.id} 
@@ -44,7 +33,7 @@ export default class FlippedPile extends Component {
                         currentOrder={currentOrder}
                         inDiscardPile={false}
                         inFlippedPile={true}
-                        columnPile={card.columnPile}
+                        columnPile={this.props.id}
                         showColumnsDrops={this.showColumnsDrops.bind(this)}
                     >
                     </Card>

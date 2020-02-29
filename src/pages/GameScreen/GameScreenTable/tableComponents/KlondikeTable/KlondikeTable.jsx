@@ -14,6 +14,7 @@ export default class KlondikeTable extends Component {
         currentDistribution: {
             discardPile: [],
             flippedPile: [],
+            suitsPiles: [[],[],[],[]],
             cardsPiles: [
                 {
                     dropShowed: false,
@@ -89,7 +90,7 @@ export default class KlondikeTable extends Component {
                         isDropShowed: false, 
                         inDiscardPile: false,
                         inFlippedPile: false,
-                        columnPile: 9999
+                        columnPile: null
                     }
                 )
             }
@@ -137,14 +138,11 @@ export default class KlondikeTable extends Component {
     }
 
     discardCardInStockPile(cardTarget) {
+        this.cardSound();
         let currentDistribution = {...this.state.currentDistribution};
         let card = {...currentDistribution.discardPile[currentDistribution.discardPile.length-1]};
-
-        this.cardSound();
-
         let transformParameters = "translate(120%, 0px) rotateY(180deg)";
         cardTarget.firstChild.style.transform = transformParameters; 
-
         setTimeout(() => {
             currentDistribution.discardPile.pop();
             let cardInTop = currentDistribution.discardPile[currentDistribution.discardPile.length-1];
@@ -157,35 +155,54 @@ export default class KlondikeTable extends Component {
             
     }
 
-    showColumnsDrops(cardInDragState, show, columnCallee) {
+    showColumnsDrops(show, pileCallee) {
         let currentDistribution = {...this.state.currentDistribution};
+        let pileNumber = -1;
+        if(pileCallee.includes('column-pile')) {
+            pileNumber = parseInt(pileCallee.replace('column-pile', ''));
+        }
         for(let i = 0; i < currentDistribution.cardsPiles.length; i++) {
-            if(i !== columnCallee) {
+            if(i !== pileNumber) {
                 currentDistribution.cardsPiles[i].dropShowed = show;
             }
         }
-        if(show) {
-            this.setState({currentDistribution: currentDistribution, currentCardInDrag: cardInDragState})
-        }else {
-            this.setState({currentCardInDrag: null})
-        }
+        this.setState({currentDistribution: currentDistribution})
     }
 
-    changeColumnOfCard(dropColumn, dragColumn) {
+    changeColumnOfCard(dropColumn, dragCardId) {
+        this.cardSound();
         let currentDistribution = {...this.state.currentDistribution};
-        if(dragColumn === 'flipped-pile'){
+        let dragColumn = dragCardId.substring(dragCardId.indexOf('_') + 1);
+        let dragCardJustId = dragCardId.substring(0, dragCardId.indexOf('_'));
+        let dragCard;
+        let dragColumnNumber;
+        if(dragColumn.includes('flipped-pile')){
+            dragCard = {...currentDistribution.flippedPile.filter((card) => card.id === dragCardJustId)[0]};
             currentDistribution.flippedPile.pop();
+        }else if(dragColumn.includes('suit-pile')) {
+            dragColumnNumber = parseInt(dragColumn.replace('suit-pile',''));
+            dragCard = {...currentDistribution.suitsPiles[dragColumnNumber].filter((card) => card.id === dragCardJustId)[0]};
+            currentDistribution.suitsPiles[dragColumnNumber].pop();
         }else {
-            currentDistribution.cardsPiles[parseInt(dragColumn)].cards.pop();
+            dragColumnNumber = parseInt(dragColumn.replace('column-pile',''));
+            dragCard = {...currentDistribution.cardsPiles[dragColumnNumber].cards.filter((card) => card.id === dragCardJustId)[0]};
+            currentDistribution.cardsPiles[dragColumnNumber].cards.pop();
         }
-        let dropColumnCards = {...currentDistribution.cardsPiles[dropColumn]};
-        let cardInTopDrop = dropColumnCards.cards[dropColumnCards.cards.length - 1];
+        let dropColumnCards;
+        let dropColumnNumber;
+        if(dropColumn.includes('suit-pile')) {
+            dropColumnNumber = parseInt(dropColumn.replace('suit-pile',''));
+            dropColumnCards = currentDistribution.suitsPiles[dropColumnNumber];
+        }else if(dropColumn.includes('column-pile')){
+            dropColumnNumber = parseInt(dropColumn.replace('column-pile',''));
+            dropColumnCards = currentDistribution.cardsPiles[dropColumnNumber].cards;
+        }
+        let cardInTopDrop = dropColumnCards[dropColumnCards.length - 1];
         if(cardInTopDrop) {
             cardInTopDrop.flipped = true;
-            cardInTopDrop.draggable = false;
+            cardInTopDrop.draggable = true;
         }
-        this.cardSound();
-        dropColumnCards.cards.push(this.state.currentCardInDrag);
+        dropColumnCards.push(dragCard);
         this.setState({currentDistribution: currentDistribution});
     }
 
@@ -217,17 +234,26 @@ export default class KlondikeTable extends Component {
                     showColumnsDrops={this.showColumnsDrops.bind(this)}>
                 </StockPile>
                 <div className="suits-piles-container">
-                    <SuitsPile></SuitsPile>
-                    <SuitsPile></SuitsPile>
-                    <SuitsPile></SuitsPile>
-                    <SuitsPile></SuitsPile>
+                    {
+                        this.state.currentDistribution.suitsPiles.map((cards, index) => (
+                            <SuitsPile
+                                game="klondike" 
+                                id={'suit-pile' + index}
+                                key={index} 
+                                cards={cards}
+                                changeColumnOfCard={this.changeColumnOfCard.bind(this)}
+                                showColumnsDrops={this.showColumnsDrops.bind(this)}
+                            >    
+                            </SuitsPile>
+                        ))
+                    }
                 </div>
                 {
                     this.state.currentDistribution.cardsPiles.map(({cards, dropShowed}, index) => (
                         <CardsColumn 
                             game="klondike"
                             key={index} 
-                            id={index} 
+                            id={'column-pile' + index} 
                             cards={cards} 
                             dropShowed={dropShowed} 
                             showColumnsDrops={this.showColumnsDrops.bind(this)}

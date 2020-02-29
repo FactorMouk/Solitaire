@@ -40,7 +40,7 @@ export default class Card extends Component {
             }
         }
         if(this.props.isDropShowed !== prevProps.isDropShowed) {
-             this.makeDropArea()
+            this.makeDropArea()
         }
     }
 
@@ -93,12 +93,12 @@ export default class Card extends Component {
                         revertDuration: 350,
                         start: () => {
                             $('#' + this.props.id + '_' + this.props.columnPile).css("z-index", '9999999');
-                            this.props.showColumnsDrops({...this.props}, true);
+                            this.props.showColumnsDrops(true);
                         },
                         stop: () => {
                             $('#' + this.props.id + '_' + this.props.columnPile).css("left", "auto");
                             $('#' + this.props.id + '_' + this.props.columnPile).css("z-index", this.props.currentOrder);
-                            this.props.showColumnsDrops({...this.props}, false);
+                            this.props.showColumnsDrops(false);
                         }                    
                     }
                 );
@@ -117,7 +117,7 @@ export default class Card extends Component {
             $("#" + this.props.id + '_' + this.props.columnPile + "-drop-area").droppable(
                 {
                     drop: (event, ui) => {
-                        this.checkIfCanFit(ui.draggable[0].id, ui.draggable[0].parentNode.id);
+                        this.checkIfCanFit(ui.draggable[0].id);
                     }                  
                 }
             );
@@ -125,12 +125,12 @@ export default class Card extends Component {
         })
     }
 
-    checkIfCanFit(cardId, cardColumn) {
+    checkIfCanFit(cardId) {
         if(this.props.game === 'klondike') {
             let types = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
             let isSmaller = types.indexOf(this.props.type) === types.indexOf(cardId.substring(0, cardId.indexOf('-'))) + 1;
             let checkIfAnotherColor = () => {
-                let cardDroppedSuit = cardId.substring(cardId.indexOf('-') + 1, cardId.lastIndexOf('-'));
+                let cardDroppedSuit = cardId.substring(cardId.indexOf('-') + 1, cardId.indexOf('-', cardId.indexOf('-') + 1));
                 if((this.props.suit === 'spades' || this.props.suit === 'clubs') &&
                     (cardDroppedSuit === 'diamonds' || cardDroppedSuit === 'hearts')
                 ) {
@@ -144,7 +144,7 @@ export default class Card extends Component {
                 }
             }
             if(isSmaller && checkIfAnotherColor()) {
-                this.props.changeColumnOfCard(cardColumn);
+                this.props.changeColumnOfCard(cardId);
             }
         }
     }
@@ -156,7 +156,7 @@ export default class Card extends Component {
     }
 
     setCardTop() {
-        if(this.props.columnPile !== 9999) {
+        if(this.props.columnPile.substring(0, this.props.columnPile.length - 1) === 'column-pile' ) {
             let currentTop = $("#" + this.props.id + "_" + this.props.columnPile).css("top");
             if(currentTop) {
                 $("#" + this.props.id + "_" + this.props.columnPile).css("top", (parseInt(currentTop.substring(0, currentTop.indexOf('p'))) + (this.props.currentOrder * 30)).toString() + 'px');

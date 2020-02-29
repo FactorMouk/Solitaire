@@ -20,8 +20,8 @@ export default class StockPile extends Component {
         this.props.returnToDiscard();
     }
 
-    showColumnsDrops(cardInDragState, show, id) {
-        this.props.showColumnsDrops(cardInDragState, show, id);
+    showColumnsDrops(show, id) {
+        this.props.showColumnsDrops(show, id);
     }
 
     render() {
@@ -29,6 +29,7 @@ export default class StockPile extends Component {
             <div className="stock-pile">
                 <DiscardPile 
                     game={this.props.game} 
+                    id="discard-pile"
                     cards={this.props.discardCards}
                     discardCardInStockPile={this.discardCardInStockPile.bind(this)}
                     returnCards={this.returnToDiscard.bind(this)}
@@ -36,6 +37,7 @@ export default class StockPile extends Component {
                 </DiscardPile>
                 <FlippedPile
                     game={this.props.game}
+                    id="flipped-pile"
                     cards={this.props.flippedCards}
                     showColumnsDrops={this.showColumnsDrops.bind(this)}
                     >

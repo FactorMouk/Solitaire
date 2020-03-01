@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import $ from 'jquery';
 import 'jquery-ui/ui/core';
 import 'jquery-ui/ui/widgets/draggable';
@@ -13,6 +14,12 @@ import hearts from './../../../../../assets/icons/cards/hearts.png';
 import king from './../../../../../assets/icons/cards/king.png';
 import queen from './../../../../../assets/icons/cards/queen.png';
 import jack from './../../../../../assets/icons/cards/jack.png';
+
+window.jQuery = $;
+window.$ = $;
+global.jQuery = $;
+require('./../../../../../assets/js/jquery-ui.drag-multiple');
+
 export default class Card extends Component {
 
     constructor(props) {
@@ -87,6 +94,7 @@ export default class Card extends Component {
             if(this.props.draggable){
                 $("#" + this.props.id + '_' + this.props.columnPile).draggable(
                     {
+                        multiple: true,
                         containment: "#game-screen-table", 
                         scroll: false,
                         revert: true,
